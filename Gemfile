@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails',                '~> 3.2.19'
+gem 'rails',                '~> 3.2.22'
 gem 'sqlite3'
 gem 'thin'
 gem 'active_enum',          '~> 0.9.12'
@@ -26,15 +26,17 @@ gem 'sunspot_solr',                       require: false
 
 gem 'pg'
 
+gem 'rake',                 '~> 10.5.0'
+
 group :development, :test do
   gem 'pry-rails'
   gem 'awesome_print'       # console highlighting
-  gem 'bullet'              # detect n+1 queries
+  gem 'bullet',             '~> 5.4.0'        # detect n+1 queries
   gem 'binding_of_caller'   # allow to spawn a REPL for above
   gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
   gem 'meta_request'        # show log in Chrome dev tools with RailsPanel addon
 
-  gem 'guard'
+  gem 'guard',              '~> 2.7.0'
   # automatically reload web pages. rack- handles the browser part and
   # guard-* listens to changes on the file systen.
   gem 'rack-livereload'
@@ -47,8 +49,8 @@ group :development, :test do
   # loaded in development mode, so it is picked up by zeus
   gem 'parallel_tests'
 
-  gem 'rspec-rails',        '~> 2.13.0'
   gem 'rspec-instafail',                  require: false
+  gem 'rspec-rails',        '~> 2.13.0'
   gem 'teaspoon'            # js unit test
 
   gem 'factory_girl_rails', '~> 4.2.0'
