@@ -1,13 +1,13 @@
 # encoding: utf-8
 
 class ReviewsController < ApplicationController
-  before_filter :require_admin_or_reviewer
-  before_filter :require_reviewer, only: :save
+  before_action :require_admin_or_reviewer
+  before_action :require_reviewer, only: :save
 
-  before_filter only: [:review, :save] do get_question(reviews_path) end
+  before_action only: [:review, :save] do get_question(reviews_path) end
 
   def messages
-    @message = TextStorage.find_or_create_by_ident("review_admin_hints")
+    @message = TextStorage.find_or_create_by(ident: "review_admin_hints")
   end
 
   def filter
@@ -78,6 +78,9 @@ class ReviewsController < ApplicationController
 
 
   private
+  def params_reviews
+    params.require(:reviews).permit(:comment, :okay, :votes, :difficulty, :learneffect, :fun)
+  end
 
   def get_review
     @review = Review.find_or_initialize_by_user_id_and_question_id(current_user.id, @question.id)

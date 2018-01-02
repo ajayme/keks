@@ -1,21 +1,21 @@
 # encoding: utf-8
 
-class Question < ActiveRecord::Base
-  attr_accessible :text, :answers, :ident, :video_link, :released
+class Question < ApplicationRecord
+  # attr_accessible :text, :answers, :ident, :video_link, :released
   validates :ident, :uniqueness => true, :presence => true
   validates :text, :presence => true
 
-  attr_accessible :difficulty
+  # attr_accessible :difficulty
   enumerate :difficulty
   validates_inclusion_of :difficulty, in: Difficulty
 
-  attr_accessible :study_path
+  # attr_accessible :study_path
   enumerate :study_path
   validates_inclusion_of :study_path, in: StudyPath
 
-  has_many :reviews, dependent: :destroy, order: 'updated_at DESC', inverse_of: :question
+  has_many :reviews, -> { order('updated_at DESC') }, dependent: :destroy, inverse_of: :question
   has_many :answers, dependent: :destroy, inverse_of: :question
-  has_many :hints, order: 'sort_hint ASC', dependent: :destroy, inverse_of: :question
+  has_many :hints, -> { order('sort_hint ASC') }, dependent: :destroy, inverse_of: :question
   has_and_belongs_to_many :starred_by, :class_name => :User, :join_table => :starred
   before_destroy do |q|
     sql =  ["DELETE FROM starred WHERE question_id = ?", q.id]

@@ -1,6 +1,6 @@
 # encoding: utf-8
 
-class UserMailer < ActionMailer::Base
+class UserMailer < ApplicationMailer
   default from: "keks@uni-hd.de"
 
   def password_reset(user)

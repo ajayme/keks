@@ -1,12 +1,12 @@
 # encoding: utf-8
 
 class QuestionsController < ApplicationController
-  before_filter :require_admin, except: [:star, :unstar, :perma]
-  before_filter :signed_in_user, only: [:star, :unstar]
-  before_filter :find_question, only: [:copy, :copy_to, :star, :unstar, :edit, :show, :perma, :toggle_release, :update, :destroy]
-  before_filter :expires_now, only: [:star, :unstar]
+  before_action :require_admin, except: [:star, :unstar, :perma]
+  before_action :signed_in_user, only: [:star, :unstar]
+  before_action :find_question, only: [:copy, :copy_to, :star, :unstar, :edit, :show, :perma, :toggle_release, :update, :destroy]
+  before_action :expires_now, only: [:star, :unstar]
 
-  before_filter :def_etag, only: [:index, :list_cat, :perma, :edit, :show]
+  before_action :def_etag, only: [:index, :list_cat, :perma, :edit, :show]
 
   def copy
     render partial: 'copy' if stale?(etag: etag)
@@ -95,7 +95,7 @@ class QuestionsController < ApplicationController
 
   def select
     ids = params['question_ids']*","
-    
+
     redirect_to main_hitme_url + "#hide-options" + "#hide-categories" + "#question=" + ids
   end
 
@@ -126,7 +126,7 @@ class QuestionsController < ApplicationController
   def toggle_release
     if @question.toggle(:released) && @question.save
       flash[:success] = "Frage aktualisiert (Released: #{@question.released})"
-      redirect_to :back
+      redirect_back(fallback_location: question_path(@question))
     else
       flash[:error] = "Konnte den Release-Status der Frage nicht umschalten."
       render 'edit'
@@ -210,6 +210,10 @@ class QuestionsController < ApplicationController
   end
 
   private
+  def params_questions
+    params.require(:questions).permit(:text, :answers, :ident, :video_link, :released, :difficulty, :study_path)
+  end
+
   def find_question
 #    id = params[:question_id] ? params[:question_id] : params[:id]
     id = params[:question_id] ? params[:question_id] : params[:question_ids] ? params[:question_ids] : params[:id]

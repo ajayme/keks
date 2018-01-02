@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-class Category < ActiveRecord::Base
-  attr_accessible :text, :title, :ident, :released, :is_root, :answer_ids
+class Category < ApplicationRecord
+  # attr_accessible :text, :title, :ident, :released, :is_root, :answer_ids
 
   validates :ident, :uniqueness => true, :presence => true
   validates :title, :presence => true
@@ -12,10 +12,10 @@ class Category < ActiveRecord::Base
 
   has_and_belongs_to_many :answers
 
-  scope :with_questions, where("questions_count > 0")
-  scope :without_questions, where(questions_count: 0)
-  scope :is_root, where(is_root: true)
-  scope :root_categories, where(is_root: true, released: true)
+  scope :with_questions, -> { where("questions_count > 0") }
+  scope :without_questions, -> { where(questions_count: 0) }
+  scope :is_root, -> { where(is_root: true) }
+  scope :root_categories, -> { where(is_root: true, released: true) }
 
   include DotTools
   include TraversalTools

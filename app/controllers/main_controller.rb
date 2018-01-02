@@ -4,7 +4,7 @@ class MainController < ApplicationController
   include MainHelper
   include RandomSelectionHelper
 
-  before_filter :def_etag, only: [:hitme, :help, :overview]
+  before_action :def_etag, only: [:hitme, :help, :overview]
 
   def overview
     return redirect_to main_hitme_url + '#hide-options' if signed_in?
@@ -101,7 +101,7 @@ class MainController < ApplicationController
   end
 
 
-  before_filter :parse_params, only: :questions
+  before_action :parse_params, only: :questions
   def questions
     expires_now
 

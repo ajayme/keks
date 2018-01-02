@@ -1,8 +1,7 @@
 # encoding: utf-8
 
-
-class Review < ActiveRecord::Base
-  attr_accessible :comment, :okay, :votes
+class Review < ApplicationRecord
+  # attr_accessible :comment, :okay, :votes
 
   belongs_to :question, inverse_of: :reviews
   belongs_to :user
@@ -30,7 +29,6 @@ class Review < ActiveRecord::Base
           self.votes ||= {}
           self.votes[:#{method_name}] = value.to_f
         end
-        attr_accessible :#{method_name}
       "
     end
   end
@@ -38,12 +36,10 @@ class Review < ActiveRecord::Base
   serialized_attr_accessor :difficulty, :learneffect, :fun
   validates :difficulty, :inclusion => 0..10
 
-
-
   validates_uniqueness_of :question_id, :scope => :user_id
 
-  belongs_to :user
-  belongs_to :question
+  # belongs_to :user
+  # belongs_to :question
 
   def question_updated_since?
     return false if self.new_record?
@@ -96,11 +92,9 @@ class Review < ActiveRecord::Base
       link_title: "Fragen ohne Reviews",
       text: "Folgende Fragen haben genau null Reviews.",
       questions: lambda { |current_user|
-        ActiveRecord::lax_includes do
           with_review = Review.group(:question_id).pluck(:question_id)
-          questions = Question.where(["id NOT IN (?)", with_review]).includes(parent: :question).all
+          questions = Question.where(["id NOT IN (?)", with_review]).includes(parent: :questions).all
           return questions
-        end
       }
     },
 
@@ -110,7 +104,7 @@ class Review < ActiveRecord::Base
       link_title: "0 < |ok| < #{REVIEW_MIN_REQUIRED_REVIEWS} und ⌐ok = 0",
       text: "Oder liebevoll: Fragen mit wenig Arbeit. Hier werden alle Fragen gelistet, die jemand als okay/richtig befunden hat. Trotzdem sollte nochmal jemand drüber schauen. Insgesamt benötigt eine Frage #{REVIEW_MIN_REQUIRED_REVIEWS} „okay“ Reviews. Bereits freigeschaltete Fragen werden hier nicht mehr aufgelistet.",
       questions: lambda { |current_user|
-        questions = Question.includes(:reviews, :parent).all
+        questions = Question.includes(:reviews, :parent).all.to_a
         questions.reject! do |q|
           q.released? || \
             q.reviews.none? || \
@@ -127,7 +121,7 @@ class Review < ActiveRecord::Base
       link_title: "#{REVIEW_MIN_REQUIRED_REVIEWS}+ okay, 0 nicht-okay",
       text: "Hier werden alle „freischaltbaren“ Fragen aufgelistet. D.h. solche, die <b>noch nicht freigeschalten</b> sind aber genug – und ausschließlich – positive Reviews haben. ".html_safe,
       questions: lambda { |current_user|
-        questions = Question.where(released: false).includes(:reviews, :parent).all
+        questions = Question.where(released: false).includes(:reviews, :parent).all.to_a
         questions.keep_if do |q|
           q.reviews.count >= REVIEW_MIN_REQUIRED_REVIEWS && \
             q.reviews.all? { |r| r.okay? }

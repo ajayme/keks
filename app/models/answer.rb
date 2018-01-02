@@ -1,7 +1,7 @@
 # encoding: utf-8
 
-class Answer < ActiveRecord::Base
-  attr_accessible :correct, :text
+class Answer < ApplicationRecord
+  # attr_accessible :correct, :text
 
   validates :text, :uniqueness => { :scope => :question_id,
     :message => "Es gibt bereits eine Antwort mit genau dem gleichen Text zu dieser Frage." }

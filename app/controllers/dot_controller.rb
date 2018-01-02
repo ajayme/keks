@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class DotController < ApplicationController
-  before_filter :require_admin
+  before_action :require_admin
 
   def simple
     # the file should be served directly by Apache/nginx. If this path

@@ -3,14 +3,14 @@
 class UsersController < ApplicationController
   include StatsHelper
 
-  before_filter :require_admin_or_reviewer, only: :reviews
-  before_filter :require_admin, only: [:index, :toggle_reviewer, :toggle_admin]
+  before_action :require_admin_or_reviewer, only: :reviews
+  before_action :require_admin, only: [:index, :toggle_reviewer, :toggle_admin]
 
   # retrieve user from URL
-  before_filter :get_user, except: [:index, :new, :create]
+  before_action :get_user, except: [:index, :new, :create]
   # i.e. user from URL is equal to the one logged in
-  before_filter :signed_in_user, only: [:edit, :update, :enroll, :starred, :history, :destroy]
-  before_filter :correct_user,   only: [:edit, :update, :enroll, :starred, :history]
+  before_action :signed_in_user, only: [:edit, :update, :enroll, :starred, :history, :destroy]
+  before_action :correct_user,   only: [:edit, :update, :enroll, :starred, :history]
 
 
   def index
@@ -43,7 +43,7 @@ class UsersController < ApplicationController
   end
 
   def history
-    @stats = @user.stats.includes(:question => [:answers]).find(:all, :order => "created_at DESC", :limit => 50)
+    @stats = @user.stats.includes(:question => [:answers]).order("created_at DESC").limit(50)
   end
 
   def new
@@ -68,7 +68,7 @@ class UsersController < ApplicationController
     chart
   end
 
-  before_filter :require_valid_enrollment_key, only: :enroll
+  before_action :require_valid_enrollment_key, only: :enroll
   def enroll
     key = params[:enrollment_key]
     if @user.enrollment_keys && @user.enrollment_keys.split.include?(key)
@@ -111,6 +111,9 @@ class UsersController < ApplicationController
   end
 
   private
+  def params_users
+    params.require(:users).permit(:nick, :mail, :study_path, :password, :password_confirmation, :admin, :enrollment_keys)
+  end
 
   def correct_user
     logger.warn "correct_user: @user: #{@user.nick}"
@@ -146,8 +149,6 @@ class UsersController < ApplicationController
     @h.series(:name=>'Richtig beantwortete Fragen', :data => percent_correct)
     @h.series(:name=>'Übersprungene Fragen', :data => percent_skipped)
   end
-
-  private
 
   def toggle_attr(attr)
     raise "attr must be symbol" unless attr.is_a?(Symbol)

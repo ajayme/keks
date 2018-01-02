@@ -1,14 +1,8 @@
 # encoding: utf-8
 
-# https://cbpowell.wordpress.com/2012/04/05/beautiful-logging-for-ruby-on-rails-3-2/
+# https://cbpowell.wordpress.com/2013/08/09/beautiful-logging-for-ruby-on-rails-4/
 
-class ActiveSupport::BufferedLogger
-  def formatter=(formatter)
-    @log.formatter = formatter
-  end
-end
-
-class Formatter
+class ActiveSupport::Logger::SimpleFormatter
   SEVERITY_TO_TAG_MAP     = {'DEBUG'=>'dbg', 'INFO'=>'inf', 'WARN'=>'wrn', 'ERROR'=>'err', 'FATAL'=>'ftl', 'UNKNOWN'=>'???'}
   SEVERITY_TO_COLOR_MAP   = {'DEBUG'=>'0;37', 'INFO'=>'32', 'WARN'=>'33', 'ERROR'=>'31', 'FATAL'=>'31', 'UNKNOWN'=>'37'}
   USE_HUMOROUS_SEVERITIES = true
@@ -27,5 +21,3 @@ class Formatter
   end
 
 end
-
-Rails.logger.formatter = Formatter.new

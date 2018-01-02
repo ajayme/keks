@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 class ApplicationController < ActionController::Base
-  protect_from_forgery
+  protect_from_forgery with: :exception
   include ApplicationHelper
   include AnswersHelper
   include SessionsHelper
@@ -9,8 +9,8 @@ class ApplicationController < ActionController::Base
   include DotHelper
   include EnrollmentKeyHelper
   include CacheTools
-
-  before_filter :set_csp
+  
+  before_action :set_csp
 
   def set_csp
     mathjax      = "https://cdnjs.cloudflare.com"

@@ -1,9 +1,9 @@
 # encoding: utf-8
 
 class StatsController < ApplicationController
-  before_filter :require_admin, except: :new
-  before_filter :get_question, only: :new
-  before_filter :extract_range_from_params, only: [:category_report, :activity_report]
+  before_action :require_admin, except: :new
+  before_action :get_question, only: :new
+  before_action :extract_range_from_params, only: [:category_report, :activity_report]
 
   def new
     [:question_id, :skipped, :correct, :time_taken].each do |p|
@@ -91,6 +91,10 @@ class StatsController < ApplicationController
   end
 
   private
+  def params_stats
+    params.require(:stats).permit(:selected_answers, :question_id, :user_id, :correct, :skipped, :time_taken)
+  end
+
 
   def extract_range_from_params
     max_days_ago = DateTime.now.mjd - DateTime.parse("2013-02-17").mjd
@@ -101,4 +105,5 @@ class StatsController < ApplicationController
     @questions = params[:questions].split("_").map(&:to_i).uniq.sort rescue []
     @questions = nil if @questions.empty? || @questions.all? { |id| id == 0 }
   end
+
 end

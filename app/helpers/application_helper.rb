@@ -54,7 +54,7 @@ module ApplicationHelper
   end
 
   # retrieves question from URL parameters for all nested resources.
-  # Usage: before_filter :get_question
+  # Usage: before_action :get_question
   def get_question(redirect_on_error = questions_path)
     @question = Question.find(params[:question_id]) rescue nil
     unless @question

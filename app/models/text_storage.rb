@@ -1,7 +1,9 @@
 # encoding: utf-8
 
-class TextStorage < ActiveRecord::Base
-  attr_accessible :ident, :value
+class TextStorage < ApplicationRecord
+  self.table_name = 'text_storage'
+  
+  # attr_accessible :ident, :value
   validates :ident, uniqueness: true
 
   def TextStorage.get(ident)

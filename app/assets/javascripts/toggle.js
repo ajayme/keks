@@ -1,6 +1,7 @@
 $(document).ready(function() {
   $('.toggle').each(function(ind, elm) {
     elm = $(elm);
+    
     var head = $(elm).prev();
     if(['H2', 'H3', 'H4', 'H5'].indexOf(head.prop("tagName")) === -1) {
       console.error("found toggle element, but previous element is not a heading. Details have been written to the debug log.");

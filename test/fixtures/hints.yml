@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  sort_hint: 1
+  text: MyText
+  question_id: 1
+
+two:
+  sort_hint: 1
+  text: MyText
+  question_id: 1

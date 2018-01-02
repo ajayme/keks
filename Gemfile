@@ -1,71 +1,73 @@
 source 'https://rubygems.org'
 
-gem 'rails',                '~> 3.2.19'
+git_source(:github) do |repo_name|
+  repo_name = "#{repo_name}/#{repo_name}" unless repo_name.include?("/")
+  "https://github.com/#{repo_name}.git"
+end
+
+
+# Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
+gem 'rails', '~> 5.1.4'
+# Use sqlite3 as the database for Active Record
 gem 'sqlite3'
-gem 'thin'
-gem 'active_enum',          '~> 0.9.12'
-gem 'nokogiri'
+# Use Puma as the app server
+gem 'puma', '~> 3.7'
+# Use SCSS for stylesheets
+gem 'sass-rails', '~> 5.0'
+
+# Use Uglifier as compressor for JavaScript assets
+gem 'uglifier'#, '>= 1.3.0'
+gem 'jquery-rails'
+gem 'jquery-tablesorter'
+gem 'js-routes'
+gem 'magnific-popup-rails'
+gem 'lazy_high_charts'
+
 gem 'will_paginate'
 
-# nested eager loading through polymorphic associations
-gem 'activerecord_lax_includes', :git => 'https://github.com/unixcharles/active-record-lax-includes.git'
+gem 'active_enum', github: 'adzap/active_enum'
+gem 'actionpack-page_caching'
 
-# javascript
-gem 'magnific-popup-rails'
-gem 'jquery-rails',         '~> 2.2.1'
-gem 'jquery-tablesorter',   '~> 1.4.1'
-gem 'js-routes',            '~> 0.8.7'
-gem 'lazy_high_charts',     '~> 1.4.0'
 
-# To use ActiveModel has_secure_password
-gem 'bcrypt-ruby',          '~> 3.0.0'
+gem 'sprockets-rails'
+
+# See https://github.com/rails/execjs#readme for more supported runtimes
+gem 'therubyracer', platforms: :ruby
+
+# Use CoffeeScript for .coffee assets and views
+gem 'coffee-rails', '~> 4.2'
+# Turbolinks makes navigating your web application faster. Read more: https://github.com/turbolinks/turbolinks
+gem 'turbolinks', '~> 5'
+# Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
+gem 'jbuilder', '~> 2.5'
+# Use Redis adapter to run Action Cable in production
+# gem 'redis', '~> 3.0'
+# Use ActiveModel has_secure_password
+gem 'bcrypt', '~> 3.1.7'
 
 # searching
 gem 'sunspot_rails'
 gem 'sunspot_solr',                       require: false
 
-gem 'pg'
+# Use Capistrano for deployment
+# gem 'capistrano-rails', group: :development
 
 group :development, :test do
-  gem 'pry-rails'
-  gem 'awesome_print'       # console highlighting
-  gem 'bullet'              # detect n+1 queries
-  gem 'binding_of_caller'   # allow to spawn a REPL for above
-  gem 'letter_opener'       # preview mails in browser rather than using an actual smtp
-  gem 'meta_request'        # show log in Chrome dev tools with RailsPanel addon
-
-  gem 'guard'
-  # automatically reload web pages. rack- handles the browser part and
-  # guard-* listens to changes on the file systen.
-  gem 'rack-livereload'
-  gem 'guard-livereload',                 require: false
-
-  gem 'guard-zeus'          # run zeus when starting guard
-  gem 'guard-bundler'       # auto install/update gems
-  gem 'guard-sunspot'       # handle solr search engine
-
-  # loaded in development mode, so it is picked up by zeus
-  gem 'parallel_tests'
-
-  gem 'rspec-rails',        '~> 2.13.0'
-  gem 'rspec-instafail',                  require: false
-  gem 'teaspoon'            # js unit test
-
-  gem 'factory_girl_rails', '~> 4.2.0'
-  gem 'capybara',           '~> 2.1.0'
-  gem 'capybara-webkit'
-  gem 'faker',              '~> 1.1.2'
-
-  gem 'zeus',                             require: false
-  gem 'zeus-parallel_tests',              require: false
-
-  gem 'simplecov',          '0.8.0.pre2', require: false
-  gem 'coveralls',                        require: false
+  # Call 'byebug' anywhere in the code to stop execution and get a debugger console
+  gem 'byebug', platforms: [:mri, :mingw, :x64_mingw]
+  # Adds support for Capybara system testing and selenium driver
+  gem 'capybara', '~> 2.13'
+  gem 'selenium-webdriver'
 end
 
-group :assets do
-  gem 'turbo-sprockets-rails3'
-  gem 'sass-rails',         '~> 3.2.6'
-  gem 'uglifier',           '~> 1.3.0'
-  gem 'therubyracer'
+group :development do
+  # Access an IRB console on exception pages or by using <%= console %> anywhere in the code.
+  gem 'web-console', '>= 3.3.0'
+  gem 'listen', '>= 3.0.5', '< 3.2'
+  # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
+  gem 'spring'
+  gem 'spring-watcher-listen', '~> 2.0.0'
 end
+
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
